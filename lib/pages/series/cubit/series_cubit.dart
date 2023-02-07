@@ -15,13 +15,20 @@ class SeriesCubit extends Cubit<SeriesState> {
   Future<void> fetchPage({int page = 1}) async {
     emit(state.copyWithProps(pageStatus: PageStatusEnum.loading));
 
-    Map<String, dynamic>? response =
-        await SeriesGetters().getSeries(page: page);
+    try {
+      Map<String, dynamic>? response = await SeriesGetters().getSeries(page: page);
 
-    emit(state.copyWithProps(
-        pageStatus: PageStatusEnum.loaded,
-        serieList: response?[MapKeys.body.series],
-        page: page,
-        totalPages: response?[MapKeys.body.total_pages]));
+      if (response == null) {
+        emit(state.copyWithProps(pageStatus: PageStatusEnum.error));
+      } else {
+        emit(state.copyWithProps(
+            pageStatus: PageStatusEnum.loaded,
+            serieList: response[MapKeys.body.series],
+            page: page,
+            totalPages: response[MapKeys.body.total_pages]));
+      }
+    } catch(e) {
+      emit(state.copyWithProps(pageStatus: PageStatusEnum.error));
+    }
   }
 }

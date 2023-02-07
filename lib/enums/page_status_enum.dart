@@ -1,2 +1,2 @@
-enum PageStatusEnum { loading, loaded }
+enum PageStatusEnum { loading, loaded, error }
 

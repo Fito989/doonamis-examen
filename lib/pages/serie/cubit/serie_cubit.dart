@@ -3,7 +3,6 @@ import 'package:doonamis_examen/api/get/series_get.dart';
 import 'package:doonamis_examen/enums/page_status_enum.dart';
 import 'package:doonamis_examen/models/serie.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 
 part 'serie_state.dart';
 
@@ -15,16 +14,22 @@ class SerieCubit extends Cubit<SerieState> {
 
   Future<void> initState({int? serieId}) async {
     Serie? serie;
-
-    if (serieId != -1) {
+    try {
       serie = await SeriesGetters().getSerie(id: serieId);
-    } else {
-      serie = Serie(id: -1);
+      print('$serie');
+      if (serie == null) {
+        emit(state.copyWithProps(
+          pageStatus: PageStatusEnum.error,
+        ));
+      } else {
+        emit(
+            state.copyWithProps(
+                pageStatus: PageStatusEnum.loaded, serie: serie));
+      }
+    } catch (e) {
+      emit(state.copyWithProps(
+        pageStatus: PageStatusEnum.error,
+      ));
     }
-
-    emit(state.copyWithProps(
-        pageStatus: PageStatusEnum.loaded,
-        serie: serie
-    ));
   }
 }

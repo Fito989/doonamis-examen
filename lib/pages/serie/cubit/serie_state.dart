@@ -8,8 +8,7 @@ class SerieState extends Equatable {
 
   SerieState copyWithProps(
       {PageStatusEnum? pageStatus,
-      Serie? serie,
-      TextEditingController? nameInput}) {
+      Serie? serie}) {
     return SerieState(
         pageStatus: pageStatus ?? this.pageStatus,
         serie: serie ?? this.serie,

@@ -37,17 +37,16 @@ class SeriesGetters {
         }
         serie = Serie(
             id: responseBody[MapKeys.body.id],
-            name: responseBody[MapKeys.body.name] ?? '',
-            overview: responseBody[MapKeys.body.overview] ?? '',
-            firstAirDate: responseBody[MapKeys.body.first_air_date] ?? '',
-            lastAirDate: responseBody[MapKeys.body.last_air_date] ?? '',
-            voteAverage: responseBody[MapKeys.body.vote_average] ?? 0,
-            voteCount: responseBody[MapKeys.body.vote_count] ?? 0,
-            inProduction: responseBody[MapKeys.body.in_production] ?? '',
-            posterPath: responseBody[MapKeys.body.poster_path] ?? '',
+            name: responseBody[MapKeys.body.name],
+            overview: responseBody[MapKeys.body.overview],
+            firstAirDate: responseBody[MapKeys.body.first_air_date],
+            lastAirDate: responseBody[MapKeys.body.last_air_date],
+            voteAverage: responseBody[MapKeys.body.vote_average],
+            voteCount: responseBody[MapKeys.body.vote_count],
+            inProduction: responseBody[MapKeys.body.in_production],
+            posterPath: responseBody[MapKeys.body.poster_path],
             creators: creators
         );
-
         return serie;
       } else {
         Logger.logUnknownError(
