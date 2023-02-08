@@ -14,14 +14,16 @@ class DoonamisApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => GenericCubit(),
-      child: MaterialApp.router(
-        routeInformationParser: Modular.routeInformationParser,
-        routerDelegate: Modular.routerDelegate,
-        debugShowCheckedModeBanner: false,
-        title: 'Doonamis',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
+      child: BlocBuilder<GenericCubit, GenericState>(
+        builder: (context, state) {
+          return MaterialApp.router(
+            routeInformationParser: Modular.routeInformationParser,
+            routerDelegate: Modular.routerDelegate,
+            debugShowCheckedModeBanner: false,
+            title: 'Doonamis',
+            theme: state.themeData,
+          );
+        },
       ),
     );
   }

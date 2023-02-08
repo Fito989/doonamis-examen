@@ -1,4 +1,3 @@
-import 'package:doonamis_examen/constants/custom_colors.dart';
 import 'package:doonamis_examen/constants/custom_fonts.dart';
 import 'package:doonamis_examen/constants/general_configuration.dart';
 import 'package:doonamis_examen/models/serie.dart';
@@ -13,55 +12,81 @@ class SerieListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: SizedBox(
-        width: double.infinity,
-        height: 100,
-        child: ElevatedButton(
-          style: ButtonStyle(
-              alignment: Alignment.centerLeft,
-              backgroundColor:
-              MaterialStateProperty.all<Color>(
-                  CustomColor.get.light_blue),
-              shape: MaterialStateProperty.all<
-                  RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                      borderRadius:
-                      BorderRadius.circular(
-                          18.0)))),
-          onPressed: () async {
-            Modular.to.navigate(
-                '${SeriePage.url}${serie.id}');
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(5),
-            child: Row(
+    return ElevatedButton(
+      style: ButtonStyle(
+          alignment: MediaQuery.of(context).orientation == Orientation.portrait ? Alignment.centerLeft : Alignment.center,
+          backgroundColor: MaterialStateProperty.all<Color>(
+              Theme.of(context).colorScheme.secondary),
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18.0)))),
+      onPressed: () async {
+        Modular.to.navigate('${SeriePage.url}${serie.id}');
+      },
+      child: MediaQuery.of(context).orientation == Orientation.portrait
+          ? Row(
               children: [
-                Image.network(GeneralConfiguration.get.images_url + serie.posterPath!,
-                errorBuilder: (context, object, stack) {
-                  return Icon(Icons.error_outline_rounded);
-                },
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8.0),
+                    child: Image.network(
+                      GeneralConfiguration.get.images_url + serie.posterPath!,
+                      height: 200,
+                      errorBuilder: (context, object, stack) {
+                        return Icon(Icons.error_outline_rounded);
+                      },
+                    ),
+                  ),
                 ),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(left: 18.0),
-                    child: Text(serie.name!,
+                    child: Text(
+                      serie.name!,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 3,
                       style: TextStyle(
-                          fontSize: 16,
-                          color: CustomColor.get.light_grey,
-                          fontFamily:
-                          CustomFonts.get.oxygen_bold),
+                          fontSize: 20,
+                          color: Theme.of(context)
+                              .textTheme
+                              .bodyLarge
+                              ?.color,
+                          fontFamily: CustomFonts.get.oxygen_bold),
                     ),
                   ),
                 ),
               ],
+            )
+          : Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8.0),
+                    child: Image.network(
+                      GeneralConfiguration.get.images_url + serie.posterPath!,
+                      height: 200,
+                      errorBuilder: (context, object, stack) {
+                        return Icon(Icons.error_outline_rounded);
+                      },
+                    ),
+                  ),
+                ),
+                Text(
+                  serie.name!,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 3,
+                  style: TextStyle(
+                      fontSize: 20,
+                      color: Theme.of(context)
+                          .textTheme
+                          .bodyLarge
+                          ?.color,
+                      fontFamily: CustomFonts.get.oxygen_bold),
+                ),
+              ],
             ),
-          ),
-        ),
-      ),
     );
   }
 }

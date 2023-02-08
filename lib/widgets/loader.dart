@@ -10,7 +10,7 @@ class Loader extends StatelessWidget {
       child: CircularProgressIndicator(
         semanticsLabel: 'Loader',
         backgroundColor: CustomColor.get.black.withOpacity(0.7),
-        color: CustomColor.get.light_blue,
+        color: Theme.of(context).colorScheme.secondary,
       ),
     );
   }

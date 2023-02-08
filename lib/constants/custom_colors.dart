@@ -11,6 +11,8 @@ class CustomColor {
 
   Color get light_blue => Color(0xff8BAAF2);
 
+  Color get electric_orange => Color(0xffff9700);
+
   Color get deep_blue => Color(0xff1c3ab9);
 
   Color get pink => Color(0xff8e30ce);
@@ -20,6 +22,8 @@ class CustomColor {
   Color get green => Color(0xff4ba429);
 
   Color get black => Color(0xff000000);
+
+  Color get very_light_grey => Color(0xff3f3f3f);
 
   Color get light_grey => Color(0xff151414);
 

@@ -1,9 +1,9 @@
-import 'package:doonamis_examen/constants/custom_colors.dart';
 import 'package:doonamis_examen/constants/custom_fonts.dart';
 import 'package:doonamis_examen/constants/memory.dart';
 import 'package:doonamis_examen/enums/page_status_enum.dart';
 import 'package:doonamis_examen/generic_bloc/generic_cubit.dart';
 import 'package:doonamis_examen/pages/series/cubit/series_cubit.dart';
+import 'package:doonamis_examen/themes/app_themes.dart';
 import 'package:doonamis_examen/widgets/error_page.dart';
 import 'package:doonamis_examen/widgets/loader.dart';
 import 'package:doonamis_examen/widgets/serie_list_item.dart';
@@ -28,26 +28,57 @@ class SeriesPage extends StatelessWidget {
           return Scaffold(
             appBar: AppBar(
               title: Text(
-                  M.languageCode == 'es' ? 'Doonamis Prueba' : 'Doonamis Test'),
-              backgroundColor: CustomColor.get.light_blue,
+                  M.languageCode == 'es' ? 'Doonamis Prueba' : 'Doonamis Test',
+                  style: TextStyle(
+                      fontSize: 20,
+                      color: Theme.of(context).textTheme.bodyLarge?.color,
+                      fontFamily: CustomFonts.get.oxygen_bold)),
+              backgroundColor: Theme.of(context).colorScheme.secondary,
               actions: [
-                Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: GestureDetector(
-                        onTap: () async {
-                          ReadContext(context)
-                              .read<GenericCubit>()
-                              .changeLanguage();
-                        },
-                        child: Text(M.languageCode.toUpperCase(),
-                            style: TextStyle(
-                                fontSize: 16,
-                                color: CustomColor.get.white,
-                                fontFamily: CustomFonts.get.oxygen_bold))))
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(right: 10.0),
+                      child: GestureDetector(
+                          onTap: () async {
+                            ReadContext(context)
+                                .read<GenericCubit>()
+                                .changeTheme();
+                          },
+                          child: Icon(
+                            state.themeData ==
+                                    AppThemes.appThemeData[AppTheme.darkTheme]
+                                ? Icons.light_mode_rounded
+                                : Icons.dark_mode_rounded,
+                            size: 16,
+                            color: Theme.of(context).textTheme.bodyLarge?.color,
+                          )),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 10.0),
+                      child: GestureDetector(
+                          onTap: () async {
+                            ReadContext(context)
+                                .read<GenericCubit>()
+                                .changeLanguage();
+                          },
+                          child: Text(M.languageCode.toUpperCase(),
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge
+                                      ?.color,
+                                  fontFamily: CustomFonts.get.oxygen_bold))),
+                    ),
+                  ],
+                )
               ],
             ),
             resizeToAvoidBottomInset: false,
-            backgroundColor: CustomColor.get.white,
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             body: BlocBuilder<SeriesCubit, SeriesState>(
               buildWhen: (previous, current) => previous != current,
               builder: (context, state) {
@@ -63,19 +94,42 @@ class SeriesPage extends StatelessWidget {
                           padding: const EdgeInsets.only(bottom: 12.0),
                           child: Column(
                             children: [
-                              Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: List.generate(
-                                      state.serieList!.length,
-                                      (i) => SerieListItem(
-                                          serie: state.serieList![i]))),
+                              MediaQuery.of(context).orientation ==
+                                      Orientation.portrait
+                                  ? Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: List.generate(
+                                          state.serieList!.length,
+                                          (i) => Padding(
+                                            padding: const EdgeInsets.all(10.0),
+                                            child: SerieListItem(
+                                                serie: state.serieList![i]),
+                                          )))
+                                  : Padding(
+                                    padding: const EdgeInsets.fromLTRB(35, 0, 35, 0),
+                                    child: GridView.count(
+                                      shrinkWrap: true,
+                                    primary: false,
+                                    padding: const EdgeInsets.all(20),
+                                    crossAxisSpacing: 10,
+                                    mainAxisSpacing: 10,
+                                    crossAxisCount: 3,
+                                        children: List.generate(
+                                            state.serieList!.length,
+                                            (i) => SerieListItem(
+                                                serie: state.serieList![i]))),
+                                  ),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   IconButton(
                                       icon: Icon(Icons.arrow_back_ios_rounded),
-                                      color: CustomColor.get.light_blue,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
                                       disabledColor: Colors.transparent,
                                       onPressed: state.page == 1
                                           ? null
@@ -90,14 +144,18 @@ class SeriesPage extends StatelessWidget {
                                     '${state.page} / ${state.totalPages}',
                                     style: TextStyle(
                                         fontSize: 16,
-                                        color: CustomColor.get.light_blue,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .secondary,
                                         fontFamily:
                                             CustomFonts.get.oxygen_bold),
                                   ),
                                   IconButton(
                                       icon:
                                           Icon(Icons.arrow_forward_ios_rounded),
-                                      color: CustomColor.get.light_blue,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
                                       onPressed: state.page == state.totalPages
                                           ? null
                                           : () async {
