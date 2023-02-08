@@ -78,7 +78,7 @@ class SerieListItem extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   maxLines: 3,
                   style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 18,
                       color: Theme.of(context)
                           .textTheme
                           .bodyLarge

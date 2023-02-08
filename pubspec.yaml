@@ -47,6 +47,11 @@ dependencies:
   flutter_translation: ^0.0.7
   get_it: ^7.2.0
   flutter_localization: ^0.1.10
+  floor: ^1.4.1
+  build_runner: ^2.3.3
+  floor_generator: ^1.4.1
+  sqflite: ^2.2.4+1
+  connectivity_plus: ^3.0.2
 
 dev_dependencies:
   flutter_test:

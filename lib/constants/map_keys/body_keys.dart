@@ -29,9 +29,7 @@ class _BodyKeys {
 
   String get vote_count => 'vote_count';
 
-  String get created_by => 'created_by';
-
-  String get gender => 'gender';
+  String get page => 'page';
 
   String get first_air_date => 'first_air_date';
 
