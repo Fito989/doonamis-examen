@@ -23,43 +23,50 @@ class SeriePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<GenericCubit, GenericState>(
-      builder: (context, state) {
-        return Scaffold(
-            appBar: AppBar(
-              actions: [
-                Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: GestureDetector(
-                        onTap: () async {
-                          ReadContext(context)
-                              .read<GenericCubit>()
-                              .changeLanguage();
-                        },
-                        child: Text(M.languageCode.toUpperCase(),
-                            style: TextStyle(
-                                fontSize: 16,
-                                color: CustomColor.get.white,
-                                fontFamily: CustomFonts.get.oxygen_bold))))
-              ],
-              title: Row(
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.arrow_back),
-                    onPressed: () async {
-                      Modular.to.navigate(SeriesPage.url);
-                    },
-                  ),
-                  Text('volver al listado'),
+    return BlocProvider(
+      create: (context) => SerieCubit(serieId: serieId),
+      child: BlocConsumer<GenericCubit, GenericState>(
+        listener: (context, state) {
+          ReadContext(context)
+              .read<SerieCubit>()
+              .initState(serieId: serieId);
+        },
+        builder: (context, state) {
+          return Scaffold(
+              appBar: AppBar(
+                actions: [
+                  Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: GestureDetector(
+                          onTap: () async {
+                            ReadContext(context)
+                                .read<GenericCubit>()
+                                .changeLanguage();
+                          },
+                          child: Text(M.languageCode.toUpperCase(),
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: CustomColor.get.white,
+                                  fontFamily: CustomFonts.get.oxygen_bold))))
                 ],
+                title: Row(
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.arrow_back),
+                      onPressed: () async {
+                        Modular.to.navigate(SeriesPage.url);
+                      },
+                    ),
+                    Text(M.languageCode == 'es'
+                        ? 'volver al listado'
+                        : 'back to list'),
+                  ],
+                ),
+                backgroundColor: CustomColor.get.light_blue,
               ),
-              backgroundColor: CustomColor.get.light_blue,
-            ),
-            resizeToAvoidBottomInset: false,
-            backgroundColor: CustomColor.get.white,
-            body: BlocProvider(
-              create: (_) => SerieCubit(serieId: serieId),
-              child: BlocBuilder<SerieCubit, SerieState>(
+              resizeToAvoidBottomInset: false,
+              backgroundColor: CustomColor.get.white,
+              body: BlocBuilder<SerieCubit, SerieState>(
                 buildWhen: (previous, current) => previous != current,
                 builder: (context, state) {
                   if (state.pageStatus == PageStatusEnum.error) {
@@ -80,18 +87,21 @@ class SeriePage extends StatelessWidget {
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                       fontSize: 30,
-                                      fontFamily: CustomFonts.get.oxygen_bold),
+                                      fontFamily:
+                                          CustomFonts.get.oxygen_bold),
                                 ),
                               ),
                               Column(
                                 children: [
                                   Padding(
-                                      padding: const EdgeInsets.only(top: 12.0),
+                                      padding:
+                                          const EdgeInsets.only(top: 12.0),
                                       child: Image.network(
-                                          GeneralConfiguration.get.images_url +
+                                          GeneralConfiguration
+                                                  .get.images_url +
                                               (state.serie?.posterPath ?? ''),
-                                          errorBuilder:
-                                              (context, exception, stackTrace) {
+                                          errorBuilder: (context, exception,
+                                              stackTrace) {
                                         return ErrorPage();
                                       })),
                                   Padding(
@@ -124,13 +134,20 @@ class SeriePage extends StatelessWidget {
                                                     text: (state.serie
                                                                 ?.inProduction ??
                                                             false)
-                                                        ? 'Finalizada'
-                                                        : 'En emisión',
+                                                        ? M.languageCode ==
+                                                                'es'
+                                                            ? 'Finalizada'
+                                                            : 'Ended'
+                                                        : M.languageCode ==
+                                                                'es'
+                                                            ? 'En emisión'
+                                                            : 'In broadcast',
                                                     style: TextStyle(
                                                         letterSpacing: 1.2,
                                                         fontSize: 16,
                                                         fontFamily: CustomFonts
-                                                            .get.oxygen_regular,
+                                                            .get
+                                                            .oxygen_regular,
                                                         color: (state.serie
                                                                     ?.inProduction ??
                                                                 false)
@@ -146,7 +163,7 @@ class SeriePage extends StatelessWidget {
                                           padding: const EdgeInsets.only(
                                               bottom: 8.0),
                                           child: Text(
-                                              'Primera emisión: ${state.serie?.firstAirDate}',
+                                              '${M.languageCode == 'es' ? 'Primera emisión' : 'First broadcast'}: ${state.serie?.firstAirDate}',
                                               style: TextStyle(
                                                   fontSize: 16,
                                                   fontFamily: CustomFonts
@@ -155,7 +172,7 @@ class SeriePage extends StatelessWidget {
                                         ),
                                         (state.serie?.inProduction ?? false)
                                             ? Text(
-                                                'Ultima emisión: ${state.serie?.lastAirDate}',
+                                                '${M.languageCode == 'es' ? 'Ultima emisión' : 'Last broadcast'}: ${state.serie?.lastAirDate}',
                                                 style: TextStyle(
                                                     fontSize: 16,
                                                     fontFamily: CustomFonts
@@ -164,11 +181,12 @@ class SeriePage extends StatelessWidget {
                                             : state.serie?.nextEpisodeAirDate !=
                                                     null
                                                 ? Text(
-                                                    'Siguiente emisión: ${state.serie?.nextEpisodeAirDate}',
+                                                    '${M.languageCode == 'es' ? 'Siguiente emisión' : 'Next broadcast'}: ${state.serie?.nextEpisodeAirDate}',
                                                     style: TextStyle(
                                                         fontSize: 16,
                                                         fontFamily: CustomFonts
-                                                            .get.oxygen_regular,
+                                                            .get
+                                                            .oxygen_regular,
                                                         letterSpacing: 1.2))
                                                 : Container(),
                                         Row(
@@ -177,21 +195,24 @@ class SeriePage extends StatelessWidget {
                                           children: [
                                             RatingBar.builder(
                                               ignoreGestures: true,
-                                              initialRating:
-                                                  ((state.serie?.voteAverage ??
-                                                          10) /
-                                                      2),
+                                              initialRating: ((state.serie
+                                                          ?.voteAverage ??
+                                                      10) /
+                                                  2),
                                               direction: Axis.horizontal,
                                               allowHalfRating: true,
                                               itemCount: 5,
-                                              itemPadding: EdgeInsets.symmetric(
-                                                  horizontal: 4.0),
-                                              itemBuilder: (context, _) => Icon(
+                                              itemPadding:
+                                                  EdgeInsets.symmetric(
+                                                      horizontal: 4.0),
+                                              itemBuilder: (context, _) =>
+                                                  Icon(
                                                 Icons.star,
                                                 color: Colors.amber,
                                                 size: 12,
                                               ),
-                                              onRatingUpdate: (double value) {},
+                                              onRatingUpdate:
+                                                  (double value) {},
                                             ),
                                             Text(
                                                 '(${(state.serie?.voteCount ?? 0)})',
@@ -211,8 +232,8 @@ class SeriePage extends StatelessWidget {
                                     child: Text('${state.serie?.overview}',
                                         style: TextStyle(
                                             fontSize: 16,
-                                            fontFamily:
-                                                CustomFonts.get.oxygen_regular,
+                                            fontFamily: CustomFonts
+                                                .get.oxygen_regular,
                                             letterSpacing: 1.2)),
                                   )
                                 ],
@@ -225,9 +246,14 @@ class SeriePage extends StatelessWidget {
                                       child: Column(
                                         children: [
                                           Text(
-                                              state.serie!.creators!.length > 1
-                                                  ? 'Creadores'
-                                                  : 'Creador',
+                                              state.serie!.creators!.length >
+                                                      1
+                                                  ? M.languageCode == 'es'
+                                                      ? 'Creadores'
+                                                      : 'Creators'
+                                                  : M.languageCode == 'es'
+                                                      ? 'Creador'
+                                                      : 'Creator',
                                               style: TextStyle(
                                                   fontSize: 22,
                                                   fontFamily: CustomFonts
@@ -235,9 +261,13 @@ class SeriePage extends StatelessWidget {
                                                   letterSpacing: 1.2)),
                                           Column(
                                               children: List.generate(
-                                                  state.serie!.creators!.length,
+                                                  state.serie!.creators!
+                                                      .length,
                                                   (i) =>
-                                                      state.serie!.creators![i]
+                                                      state
+                                                                  .serie!
+                                                                  .creators![
+                                                                      i]
                                                                   .name !=
                                                               null
                                                           ? RichText(
@@ -251,25 +281,18 @@ class SeriePage extends StatelessWidget {
                                                                               1.2,
                                                                           fontSize:
                                                                               18,
-                                                                          fontFamily: CustomFonts
-                                                                              .get
-                                                                              .oxygen_regular,
-                                                                          color: CustomColor
-                                                                              .get
-                                                                              .light_grey)),
+                                                                          fontFamily:
+                                                                              CustomFonts.get.oxygen_regular,
+                                                                          color: CustomColor.get.light_grey)),
                                                                   WidgetSpan(
                                                                     child: (state.serie!.creators![i].gender ==
                                                                             1)
-                                                                        ? Icon(
-                                                                            Icons
-                                                                                .female,
+                                                                        ? Icon(Icons.female,
                                                                             color: CustomColor
                                                                                 .get.pink)
                                                                         : Icon(
-                                                                            Icons
-                                                                                .male,
-                                                                            color:
-                                                                                CustomColor.get.deep_blue),
+                                                                            Icons.male,
+                                                                            color: CustomColor.get.deep_blue),
                                                                   ),
                                                                 ],
                                                               ),
@@ -285,9 +308,9 @@ class SeriePage extends StatelessWidget {
                   }
                   return Loader();
                 },
-              ),
-            ));
-      },
+              ));
+        },
+      ),
     );
   }
 }

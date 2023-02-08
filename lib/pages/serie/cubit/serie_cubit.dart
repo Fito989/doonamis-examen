@@ -9,22 +9,22 @@ part 'serie_state.dart';
 class SerieCubit extends Cubit<SerieState> {
   SerieCubit({int? serieId})
       : super(SerieState(pageStatus: PageStatusEnum.loading)) {
+    print('serie ininit $serieId');
     initState(serieId: serieId);
   }
 
   Future<void> initState({int? serieId}) async {
     Serie? serie;
     try {
+      print('$serieId');
       serie = await SeriesGetters().getSerie(id: serieId);
-      print('$serie');
       if (serie == null) {
         emit(state.copyWithProps(
           pageStatus: PageStatusEnum.error,
         ));
       } else {
-        emit(
-            state.copyWithProps(
-                pageStatus: PageStatusEnum.loaded, serie: serie));
+        emit(state.copyWithProps(
+            pageStatus: PageStatusEnum.loaded, serie: serie));
       }
     } catch (e) {
       emit(state.copyWithProps(

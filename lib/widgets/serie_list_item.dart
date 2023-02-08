@@ -38,7 +38,11 @@ class SerieListItem extends StatelessWidget {
             padding: const EdgeInsets.all(5),
             child: Row(
               children: [
-                Image.network(GeneralConfiguration.get.images_url + serie.posterPath!),
+                Image.network(GeneralConfiguration.get.images_url + serie.posterPath!,
+                errorBuilder: (context, object, stack) {
+                  return Icon(Icons.error_outline_rounded);
+                },
+                ),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(left: 18.0),

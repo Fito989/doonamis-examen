@@ -18,33 +18,37 @@ class SeriesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<GenericCubit, GenericState>(
-      builder: (context, state) {
-        return Scaffold(
-          appBar: AppBar(
-            title: Text('Doonamis Prueba'),
-            backgroundColor: CustomColor.get.light_blue,
-            actions: [
-              Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: GestureDetector(
-                      onTap: () async {
-                        ReadContext(context)
-                            .read<GenericCubit>()
-                            .changeLanguage();
-                      },
-                      child: Text(M.languageCode.toUpperCase(),
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: CustomColor.get.white,
-                              fontFamily: CustomFonts.get.oxygen_bold))))
-            ],
-          ),
-          resizeToAvoidBottomInset: false,
-          backgroundColor: CustomColor.get.white,
-          body: BlocProvider(
-            create: (_) => SeriesCubit(),
-            child: BlocBuilder<SeriesCubit, SeriesState>(
+    return BlocProvider(
+      create: (context) => SeriesCubit(),
+      child: BlocConsumer<GenericCubit, GenericState>(
+        listener: (context, state) {
+          ReadContext(context).read<SeriesCubit>().fetchPage();
+        },
+        builder: (context, state) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text(
+                  M.languageCode == 'es' ? 'Doonamis Prueba' : 'Doonamis Test'),
+              backgroundColor: CustomColor.get.light_blue,
+              actions: [
+                Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: GestureDetector(
+                        onTap: () async {
+                          ReadContext(context)
+                              .read<GenericCubit>()
+                              .changeLanguage();
+                        },
+                        child: Text(M.languageCode.toUpperCase(),
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: CustomColor.get.white,
+                                fontFamily: CustomFonts.get.oxygen_bold))))
+              ],
+            ),
+            resizeToAvoidBottomInset: false,
+            backgroundColor: CustomColor.get.white,
+            body: BlocBuilder<SeriesCubit, SeriesState>(
               buildWhen: (previous, current) => previous != current,
               builder: (context, state) {
                 if (state.pageStatus == PageStatusEnum.error) {
@@ -116,9 +120,9 @@ class SeriesPage extends StatelessWidget {
                 }
               },
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }
